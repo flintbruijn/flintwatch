@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FlintGames</title>
+<title>FlintWatch</title>
 
 <style>
 * {
@@ -1290,7 +1290,7 @@ main {
         <input
           id="zoekveld"
           type="search"
-          placeholder="Zoek een game..."
+          placeholder="Zoek een video..."
           autocomplete="off"
         >
       </div>
@@ -1304,10 +1304,10 @@ main {
   <div class="intro">
 
     <div>
-      <h1>Alle games</h1>
+      <h1>Alle video's</h1>
 
       <p>
-        Kies een game om direct te spelen.
+        Kies een video om direct te bekijken.
       </p>
     </div>
 
@@ -1316,7 +1316,7 @@ main {
   </div>
 
   <div
-    class="games"
+    class="videos"
     id="gamesContainer"
   ></div>
 
@@ -1324,7 +1324,7 @@ main {
     class="geen-resultaat"
     id="geenResultaat"
   >
-    <strong>Geen games gevonden</strong>
+    <strong>Geen video's gevonden</strong>
     Probeer een andere zoekterm.
   </div>
 
@@ -1473,11 +1473,11 @@ main {
       <div class="andere-games-header">
 
         <h2>
-          Andere games
+          Andere video's
         </h2>
 
         <p>
-          Speel ook een andere game.
+          Bekijk ook een andere video.
         </p>
 
       </div>
@@ -1502,11 +1502,10 @@ main {
 
   <div class="extern-waarschuwing-menu">
 
-    <h2>Externe serie</h2>
+    <h2>Extern openen</h2>
 
-    <p>
-      Deze serie wordt door Netflix uitgevoerd.
-      Weet je zeker dat je wilt doorgaan?
+    <p id="externWaarschuwingTekst">
+      Deze video wordt extern geopend.
     </p>
 
     <div class="extern-waarschuwing-knoppen">
@@ -1604,7 +1603,7 @@ main {
       <div class="credit-sectie">
 
         <h3>
-          Games
+          Video's
         </h3>
 
         <p>
@@ -1799,6 +1798,20 @@ const links = [
       "data:image/jpeg;base64,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"
   },
 
+   {
+    naam: "▶ One Piece",
+    url: "https://www.netflix.com/nl/title/80217863",
+    afbeelding:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfJumq0NPjXq4mS3fwytH6PQF78HQRmyWDvkQP9fbE5w&s=10"
+  },
+
+  {
+    naam: "▶ Young Sheldon",
+    url: "https://www.netflix.com/nl/title/80192612",
+    afbeelding:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1uiGzXdNYAXyLz2yPcAvyTyKe9UXxrI0J2a2vh8-ImQ&s=10"
+  },
+
   
 
  
@@ -1894,7 +1907,7 @@ const fallbackAfbeelding =
         font-family="Arial"
         font-size="28"
         font-weight="700">
-        FlintGames
+        FlintWatch
       </text>
 
       <text
@@ -2179,79 +2192,22 @@ function toonAndereGames() {
 function openGame(game) {
 
   /*
-    Wachtwoordbeveiligde games mogen pas openen
-    nadat het juiste wachtwoord is ingevoerd.
+    Alle video's worden extern geopend.
+    Eerst tonen we altijd een bevestiging met de naam van de video.
   */
-  if (game.wachtwoordBeveiligd === true) {
-    wachtwoordGame = game;
-    wachtwoordFout.style.display = "none";
-    wachtwoordInput.value = "";
-    wachtwoordOverlay.style.display = "flex";
+  huidigeGame = game;
 
-    setTimeout(function() {
-      wachtwoordInput.focus();
-    }, 50);
+  if (externWaarschuwing) {
+    const tekst =
+      document.getElementById("externWaarschuwingTekst");
 
-    return;
+    if (tekst) {
+      tekst.textContent =
+        game.naam + " wordt extern geopend.";
+    }
+
+    externWaarschuwing.style.display = "flex";
   }
-
-  /*
-    Alleen . wordt
-    extern geopend.
-  */
-
-  if (
-    game.naam === "▶ ONE PIECE"
-  ) {
-
-    huidigeGame =
-      game;
-
-    externWaarschuwing.style.display =
-      "flex";
-
-    return;
-  }
-
-  huidigeGame =
-    game;
-
-  menuPagina.style.display =
-    "none";
-
-  gamePagina.style.display =
-    "block";
-
-  document.body.style.overflow =
-    "hidden";
-
-  gameTitel.textContent =
-    game.naam;
-
-  gameUrlStatus.textContent =
-    game.url;
-
-  gameError.style.display =
-    "none";
-
-  gameLoading.classList.remove(
-    "hidden"
-  );
-
-  gameFrame.src =
-    "about:blank";
-
-  toonAndereGames();
-
-  setTimeout(
-    function() {
-
-      gameFrame.src =
-        game.url;
-
-    },
-    40
-  );
 }
 
 function sluitWachtwoordOverlay() {
