@@ -1,0 +1,2790 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlintGames</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #111116;
+  color: #fff;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+/* ==================================================
+   HEADER
+================================================== */
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #17171c;
+  border-bottom: 1px solid #292930;
+}
+
+.header-inner {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 14px 24px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+
+.logo span {
+  color: #ff4d6d;
+}
+
+.zoekbalk {
+  position: relative;
+  width: min(520px, 100%);
+}
+
+.zoekbalk input {
+  width: 100%;
+  height: 46px;
+  padding: 0 18px 0 47px;
+  border: 0;
+  outline: none;
+  border-radius: 13px;
+  background: #25252b;
+  color: #fff;
+  font-size: 15px;
+  box-shadow: inset 0 0 0 1px #303038;
+  transition:
+    background .15s ease,
+    box-shadow .15s ease;
+}
+
+.zoekbalk input::placeholder {
+  color: #85858f;
+}
+
+.zoekbalk input:focus {
+  background: #2a2a31;
+  box-shadow: inset 0 0 0 2px #ff4d6d;
+}
+
+.zoek-icoon {
+  position: absolute;
+  top: 10px;
+  left: 16px;
+  z-index: 2;
+  font-size: 21px;
+  color: #aaaab3;
+  pointer-events: none;
+}
+
+/* ==================================================
+   MENU PAGINA
+================================================== */
+
+#menuPagina {
+  display: block;
+}
+
+main {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 34px 24px 30px;
+}
+
+.intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.intro h1 {
+  margin: 0 0 6px;
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+.intro p {
+  margin: 0;
+  color: #92929d;
+  font-size: 15px;
+}
+
+#aantal {
+  color: #85858f;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ==================================================
+   GAMEGRID
+================================================== */
+
+.games {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+  gap: 18px;
+}
+
+.game {
+  position: relative;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.kaart {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 0;
+  border-radius: 17px;
+  background: #24242a;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, .22),
+    0 1px 2px rgba(0, 0, 0, .2);
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease;
+}
+
+.game:hover .kaart {
+  transform: translateY(-6px) scale(1.025);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, .38),
+    0 5px 10px rgba(0, 0, 0, .2);
+}
+
+.game:active .kaart {
+  transform: translateY(-2px) scale(.99);
+}
+
+.game-afbeelding {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #29292f;
+  transition:
+    transform .25s ease,
+    filter .2s ease;
+}
+
+.game:hover .game-afbeelding {
+  transform: scale(1.07);
+}
+
+/* ==================================================
+   HOVER GRADIENT
+================================================== */
+
+.kaart::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 52%;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, .92),
+    rgba(0, 0, 0, .58),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity .18s ease;
+  pointer-events: none;
+}
+
+.game:hover .kaart::after {
+  opacity: 1;
+}
+
+/* ==================================================
+   GAME NAAM
+================================================== */
+
+.game-info {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  padding: 15px 14px 13px;
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity .2s ease,
+    transform .2s ease;
+  pointer-events: none;
+}
+
+.game:hover .game-info {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.game-naam {
+  display: block;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.15;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .65);
+  white-space: normal;
+  overflow: hidden;
+}
+
+.game-sub {
+  display: none;
+}
+
+/* ==================================================
+   GEEN RESULTAAT
+================================================== */
+
+.geen-resultaat {
+  display: none;
+  padding: 90px 20px;
+  color: #9999a3;
+  text-align: center;
+}
+
+.geen-resultaat strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #fff;
+  font-size: 22px;
+}
+
+/* ==================================================
+   CREDITS KNOP
+================================================== */
+
+.credits-knop-container {
+  display: flex;
+  justify-content: center;
+  padding: 55px 0 25px;
+}
+
+.credits-knop {
+  border: 0;
+  border-radius: 12px;
+  padding: 11px 24px;
+  background: #24242a;
+  color: #9c9ca6;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px #303038;
+  transition:
+    background .15s ease,
+    color .15s ease,
+    transform .15s ease;
+}
+
+.credits-knop:hover {
+  background: #2d2d34;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+
+/* ==================================================
+   CREDITS OVERLAY
+================================================== */
+
+#creditsOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  padding: 20px;
+  background: rgba(0, 0, 0, .82);
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+
+.credits-menu {
+  width: min(900px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid #36363d;
+  border-radius: 20px;
+  background: #1b1b1f;
+  box-shadow: 0 25px 80px rgba(0, 0, .7);
+}
+
+.credits-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 22px;
+  border-bottom: 1px solid #303036;
+  background: rgba(27, 27, 31, .98);
+  backdrop-filter: blur(12px);
+}
+
+.credits-header h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.credits-sluit {
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 10px;
+  background: #2b2b30;
+  color: #fff;
+  font-size: 21px;
+  cursor: pointer;
+  transition: .15s ease;
+}
+
+.credits-sluit:hover {
+  background: #3a3a41;
+}
+
+.credits-content {
+  padding: 22px;
+}
+
+.credit-sectie {
+  margin-bottom: 30px;
+}
+
+.credit-sectie:last-child {
+  margin-bottom: 0;
+}
+
+.credit-sectie h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.credit-sectie p {
+  margin: 0;
+  color: #a0a0a9;
+  line-height: 1.5;
+}
+
+.afbeelding-credit-lijst {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.afbeelding-credit {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 11px;
+  align-items: center;
+  padding: 9px;
+  border: 1px solid #2d2d33;
+  border-radius: 11px;
+  background: #222226;
+}
+
+.afbeelding-credit img {
+  width: 80px;
+  height: 55px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #303035;
+}
+
+.afbeelding-credit-info {
+  min-width: 0;
+}
+
+.afbeelding-credit-nummer {
+  display: block;
+  margin-bottom: 4px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.afbeelding-credit-game {
+  display: block;
+  margin-bottom: 4px;
+  overflow: hidden;
+  color: #aaaab2;
+  font-size: 11px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.afbeelding-credit-bron {
+  display: block;
+  overflow: hidden;
+  color: #85858e;
+  font-size: 11px;
+  line-height: 1.3;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ==================================================
+   SPEELSCHERM
+================================================== */
+
+#gamePagina {
+  display: none;
+  min-height: 100vh;
+  background: #101012;
+}
+
+.game-wrapper {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+.game-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 18px;
+  align-items: start;
+}
+
+.game-main {
+  min-width: 0;
+}
+
+.game-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 12px;
+}
+
+.game-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.terug-knop,
+.fullscreen-knop {
+  border: 0;
+  border-radius: 11px;
+  padding: 10px 14px;
+  background: #29292e;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .15s ease;
+  white-space: nowrap;
+}
+
+.terug-knop:hover,
+.fullscreen-knop:hover {
+  background: #393940;
+}
+
+.huidige-game-naam {
+  overflow: hidden;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ==================================================
+   IFRAME
+================================================== */
+
+.game-frame-container {
+  position: relative;
+  width: 100%;
+  min-height: 520px;
+  height: calc(100dvh - 115px);
+  max-height: 850px;
+  overflow: hidden;
+  border: 1px solid #2b2b30;
+  border-radius: 15px;
+  background: #000;
+  box-shadow: 0 15px 45px rgba(0, 0, .4);
+}
+
+#gameFrame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #000;
+}
+
+/* ==================================================
+   LAADSCREEN
+================================================== */
+
+.game-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  background: #000;
+  pointer-events: none;
+  transition: opacity .25s ease;
+}
+
+.game-loading.hidden {
+  opacity: 0;
+}
+
+.spinner {
+  width: 42px;
+  height: 42px;
+  border: 4px solid #333338;
+  border-top-color: #ff4d6d;
+  border-radius: 50%;
+  animation: draaien .8s linear infinite;
+}
+
+@keyframes draaien {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  color: #aaaab2;
+  font-size: 14px;
+}
+
+/* ==================================================
+   RECHTER GAME MENU
+================================================== */
+
+.andere-games {
+  position: sticky;
+  top: 100px;
+  overflow: hidden;
+  border: 1px solid #29292e;
+  border-radius: 15px;
+  background: #18181b;
+}
+
+.andere-games-header {
+  padding: 16px;
+  border-bottom: 1px solid #29292e;
+}
+
+.andere-games-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.andere-games-header p {
+  margin: 5px 0 0;
+  color: #85858d;
+  font-size: 12px;
+}
+
+#andereGamesContainer {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 210px);
+  overflow-y: auto;
+}
+
+#andereGamesContainer::-webkit-scrollbar {
+  width: 8px;
+}
+
+#andereGamesContainer::-webkit-scrollbar-track {
+  background: #151518;
+}
+
+#andereGamesContainer::-webkit-scrollbar-thumb {
+  background: #3b3b42;
+  border-radius: 10px;
+}
+
+.side-game {
+  display: flex;
+  width: 100%;
+  padding: 10px;
+  gap: 11px;
+  border: 0;
+  border-bottom: 1px solid #29292e;
+  background: transparent;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+
+.side-game:last-child {
+  border-bottom: 0;
+}
+
+.side-game:hover {
+  background: #232327;
+}
+
+.side-game.active {
+  background: #29292e;
+}
+
+.side-game-afbeelding {
+  flex: 0 0 92px;
+  width: 92px;
+  height: 62px;
+  border-radius: 9px;
+  object-fit: cover;
+  background: #303035;
+}
+
+.side-game-info {
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.side-game-naam {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.side-game-speel {
+  margin-top: 5px;
+  color: #888891;
+  font-size: 11px;
+}
+
+/* ==================================================
+   ONDER GAME
+================================================== */
+
+.game-onderkant {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 12px;
+  color: #888891;
+  font-size: 12px;
+}
+
+.game-url-status {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ==================================================
+   ERROR
+================================================== */
+
+.game-error {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  background: #111114;
+  text-align: center;
+}
+
+.game-error-inner {
+  width: min(500px, 100%);
+}
+
+.game-error h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+}
+
+.game-error p {
+  margin: 0 0 22px;
+  color: #a1a1ab;
+  line-height: 1.5;
+}
+
+.-knop {
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 18px;
+  background: #ff4d6d;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ==================================================
+   EXTERNE WAARSCHUWING
+================================================== */
+
+#externWaarschuwing {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  padding: 20px;
+  background: rgba(0, 0, 0, .82);
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+
+.extern-waarschuwing-menu {
+  width: min(460px, 100%);
+  padding: 28px;
+  border: 1px solid #38383f;
+  border-radius: 20px;
+  background: #1b1b1f;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, .7);
+}
+
+.extern-waarschuwing-menu h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+}
+
+.extern-waarschuwing-menu p {
+  margin: 0;
+  color: #a0a0a9;
+  line-height: 1.5;
+}
+
+.extern-waarschuwing-knoppen {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.waarschuwing-annuleren,
+.waarschuwing-doorgaan {
+  border: 0;
+  border-radius: 11px;
+  padding: 11px 17px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .15s ease;
+}
+
+.waarschuwing-annuleren {
+  background: #2b2b30;
+  color: #fff;
+}
+
+.waarschuwing-annuleren:hover {
+  background: #393940;
+}
+
+.waarschuwing-doorgaan {
+  background: #ff4d6d;
+  color: #fff;
+}
+
+.waarschuwing-doorgaan:hover {
+  background: #ff385c;
+}
+
+/* ==================================================
+   WACHTWOORD OVERLAY
+================================================== */
+#wachtwoordOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  padding: 20px;
+  background: rgba(0,0,0,.82);
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+
+.wachtwoord-menu {
+  width: min(460px, 100%);
+  padding: 28px;
+  border: 1px solid #38383f;
+  border-radius: 20px;
+  background: #1b1b1f;
+  box-shadow: 0 25px 80px rgba(0,0,0,.7);
+}
+
+.wachtwoord-menu h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+}
+
+.wachtwoord-menu p {
+  margin: 0;
+  color: #a0a0a9;
+  line-height: 1.5;
+}
+
+#wachtwoordInput {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px 14px;
+  border: 1px solid #3a3a42;
+  border-radius: 11px;
+  outline: none;
+  background: #25252b;
+  color: #fff;
+  font-size: 15px;
+}
+
+#wachtwoordInput:focus {
+  border-color: #ff4d6d;
+  box-shadow: 0 0 0 2px rgba(255,77,109,.15);
+}
+
+#wachtwoordFout {
+  display: none;
+  margin-top: 9px;
+  color: #ff7f95;
+  font-size: 13px;
+}
+
+.wachtwoord-knoppen {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* ==================================================
+   MOBIELE SCHERMFORMAAT-WAARSCHUWING
+================================================== */
+
+#mobieleOriëntatieWaarschuwing {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  padding: 24px;
+  background: rgba(0, 0, 0, .94);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.mobiele-orientatie-menu {
+  width: min(420px, 100%);
+  padding: 30px 24px;
+  border: 1px solid #38383f;
+  border-radius: 22px;
+  background: #1b1b1f;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, .75);
+}
+
+.mobiele-orientatie-icoon {
+  width: 54px;
+  height: 72px;
+  margin: 0 auto 20px;
+  border: 4px solid #fff;
+  border-radius: 10px;
+  transform: rotate(0deg);
+  position: relative;
+  transition: transform .25s ease;
+}
+
+.mobiele-orientatie-icoon::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  left: 50%;
+  bottom: 5px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: #fff;
+}
+
+.mobiele-orientatie-menu h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+}
+
+.mobiele-orientatie-menu p {
+  margin: 0;
+  color: #a0a0a9;
+  line-height: 1.5;
+}
+
+.mobiele-orientatie-knop {
+  width: 100%;
+  margin-top: 24px;
+  border: 0;
+  border-radius: 12px;
+  padding: 13px 18px;
+  background: #ff4d6d;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .15s ease;
+}
+
+.mobiele-orientatie-knop:hover {
+  background: #ff385c;
+}
+
+.mobiele-orientatie-hint {
+  margin-top: 12px !important;
+  font-size: 12px;
+  color: #777780 !important;
+}
+
+/* Alleen telefoons in portret */
+@media (orientation: portrait) and (max-width: 767px) and (pointer: coarse) {
+  #mobieleOriëntatieWaarschuwing {
+    display: flex;
+  }
+
+  #mobieleOriëntatieWaarschuwing .mobiele-orientatie-icoon {
+    animation: draaiTelefoon 1.8s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes draaiTelefoon {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(90deg);
+  }
+}
+
+/* ==================================================
+   TELEFOON - LANDSCAPE GAME MODE
+================================================== */
+@media (pointer: coarse) and (orientation: landscape) and (max-height: 600px) {
+
+  #gamePagina {
+    min-height: 100dvh;
+    height: 100dvh;
+  }
+
+  .game-wrapper {
+    height: 100dvh;
+    max-width: none;
+    padding: 6px;
+  }
+
+  .game-layout {
+    display: block;
+  }
+
+  .game-main {
+    width: 100%;
+    height: 100%;
+  }
+
+  .game-topbar {
+    height: 42px;
+    margin-bottom: 6px;
+  }
+
+  .game-frame-container {
+    width: 100%;
+    height: calc(100dvh - 60px);
+    min-height: 0;
+    max-height: none;
+    border-radius: 10px;
+  }
+
+  .game-onderkant {
+    display: none;
+  }
+
+  .andere-games {
+    display: none !important;
+  }
+}
+
+/* ==================================================
+   TELEFOON - GEEN ZIJGAMES IN SPEELSCHERM
+================================================== */
+@media (pointer: coarse) and (orientation: portrait) and (max-width: 767px),
+       (pointer: coarse) and (orientation: landscape) and (max-height: 600px) {
+
+  .game-layout {
+    display: block;
+  }
+
+  .andere-games {
+    display: none !important;
+  }
+}
+
+/* ==================================================
+   SNEL TERUG NAAR HOME
+================================================== */
+.terug-knop {
+  position: relative;
+  z-index: 50;
+}
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
+
+@media (max-width: 1000px) {
+
+  .game-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .andere-games {
+    position: static;
+  }
+
+  #andereGamesContainer {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-height: none;
+  }
+
+  .side-game {
+    min-width: 0;
+    flex-direction: column;
+    padding: 10px;
+    border-right: 1px solid #29292e;
+  }
+
+  .side-game-afbeelding {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    flex-basis: auto;
+  }
+
+  .side-game-speel {
+    display: none;
+  }
+}
+
+@media (max-width: 800px) {
+
+  .header-inner {
+    padding: 14px 15px;
+  }
+
+  .topbar {
+    display: block;
+  }
+
+  .logo {
+    margin-bottom: 13px;
+  }
+
+  main {
+    padding: 22px 15px 20px;
+  }
+
+  .games {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .game-wrapper {
+    padding: 12px;
+  }
+
+  .game-frame-container {
+    min-height: 420px;
+    height: calc(100vh - 160px);
+  }
+
+  #andereGamesContainer {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+
+  .games {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .intro {
+    align-items: center;
+  }
+
+  .intro h1 {
+    font-size: 26px;
+  }
+
+  .game-topbar {
+    align-items: flex-start;
+  }
+
+  .game-topbar-left {
+    min-width: 0;
+  }
+
+  .huidige-game-naam {
+    font-size: 15px;
+  }
+
+  .fullscreen-knop {
+    padding: 10px 11px;
+  }
+
+  .game-frame-container {
+    min-height: 360px;
+    height: calc(100vh - 175px);
+  }
+
+  .afbeelding-credit-lijst {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 390px) {
+
+  .games {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  #andereGamesContainer {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .intro {
+    display: block;
+  }
+
+  #aantal {
+    margin-top: 8px;
+  }
+
+  .game-wrapper {
+    padding: 9px;
+  }
+
+  .game-naam {
+    font-size: 14px;
+  }
+}
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</style>
+</head>
+
+
+<body>
+
+<!-- ==================================================
+     MOBIELE SCHERMFORMAAT-WAARSCHUWING
+================================================== -->
+
+<div id="mobieleOriëntatieWaarschuwing" aria-live="polite">
+  <div class="mobiele-orientatie-menu">
+
+    <div class="mobiele-orientatie-icoon" aria-hidden="true"></div>
+
+    <h2>Deze website is niet geschikt voor dit schermformaat</h2>
+
+    <p>Draai je telefoon.</p>
+
+    <button
+      id="draaiTelefoonKnop"
+      class="mobiele-orientatie-knop"
+      type="button"
+    >
+      Draai scherm
+    </button>
+
+    <p class="mobiele-orientatie-hint">
+      Werkt de knop niet? Draai je telefoon dan handmatig.
+    </p>
+
+  </div>
+</div>
+
+
+
+<!-- ==================================================
+     MENU PAGINA
+================================================== -->
+
+<section id="menuPagina">
+
+<header>
+  <div class="header-inner">
+    <div class="topbar">
+
+      <div
+        class="logo"
+        onclick="naarMenu()"
+      >
+        Flint<span>Watch</span>
+      </div>
+
+      <div class="zoekbalk">
+        <span class="zoek-icoon">⌕</span>
+
+        <input
+          id="zoekveld"
+          type="search"
+          placeholder="Zoek een game..."
+          autocomplete="off"
+        >
+      </div>
+
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="intro">
+
+    <div>
+      <h1>Alle games</h1>
+
+      <p>
+        Kies een game om direct te spelen.
+      </p>
+    </div>
+
+    <div id="aantal"></div>
+
+  </div>
+
+  <div
+    class="games"
+    id="gamesContainer"
+  ></div>
+
+  <div
+    class="geen-resultaat"
+    id="geenResultaat"
+  >
+    <strong>Geen games gevonden</strong>
+    Probeer een andere zoekterm.
+  </div>
+
+  <div class="credits-knop-container">
+
+    <button
+      class="credits-knop"
+      type="button"
+      onclick="openCredits()"
+    >
+      Credits & Version
+    </button>
+
+  </div>
+
+</main>
+
+</section>
+
+<!-- ==================================================
+     SPEELPAGINA
+================================================== -->
+
+<section id="gamePagina">
+
+<div class="game-wrapper">
+
+  <div class="game-layout">
+
+    <div class="game-main">
+
+      <div class="game-topbar">
+
+        <div class="game-topbar-left">
+
+          <button
+            class="terug-knop"
+            type="button"
+            onclick="naarMenu()"
+            aria-label="Terug naar home"
+            title="Terug naar home"
+          >
+            ← Home
+          </button>
+
+          <div
+            class="huidige-game-naam"
+            id="gameTitel"
+          >
+            Game
+          </div>
+
+        </div>
+
+        <button
+          class="fullscreen-knop"
+          type="button"
+          onclick="maakFullscreen()"
+        >
+          ⛶ Fullscreen
+        </button>
+
+      </div>
+
+      <div
+        class="game-frame-container"
+        id="gameFrameContainer"
+      >
+
+        <div
+          class="game-loading"
+          id="gameLoading"
+        >
+          <div class="spinner"></div>
+
+          <div class="loading-text">
+            Game laden...
+          </div>
+        </div>
+
+        <div
+          class="game-error"
+          id="gameError"
+        >
+
+          <div class="game-error-inner">
+
+            <h2>
+              Game kon niet worden geladen
+            </h2>
+
+            <p>
+              Deze website staat mogelijk niet toe
+              dat hij binnen FlintWatch wordt weergegeven.
+            </p>
+
+            <button
+              class="extern-knop"
+              type="button"
+              onclick="openExtern()"
+            >
+              Open game apart
+            </button>
+
+          </div>
+
+        </div>
+
+        <iframe
+          id="gameFrame"
+          title="FlintWatch Serie"
+          allow="
+            autoplay;
+            fullscreen;
+            gamepad;
+            accelerometer;
+            gyroscope;
+            microphone;
+            camera;
+            clipboard-read;
+            clipboard-write
+          "
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin"
+        ></iframe>
+
+      </div>
+
+      <div class="game-onderkant">
+
+        <div>
+          FlintWatch
+        </div>
+
+        <div
+          class="game-url-status"
+          id="gameUrlStatus"
+        ></div>
+
+      </div>
+
+    </div>
+
+    <aside class="andere-games">
+
+      <div class="andere-games-header">
+
+        <h2>
+          Andere games
+        </h2>
+
+        <p>
+          Speel ook een andere game.
+        </p>
+
+      </div>
+
+      <div
+        id="andereGamesContainer"
+      ></div>
+
+    </aside>
+
+  </div>
+
+</div>
+
+</section>
+
+<!-- ==================================================
+     EXTERNE WAARSCHUWING
+================================================== -->
+
+<div id="externWaarschuwing">
+
+  <div class="extern-waarschuwing-menu">
+
+    <h2>Externe serie</h2>
+
+    <p>
+      Deze serie wordt door Netflix uitgevoerd.
+      Weet je zeker dat je wilt doorgaan?
+    </p>
+
+    <div class="extern-waarschuwing-knoppen">
+
+      <button
+        type="button"
+        class="waarschuwing-annuleren"
+        onclick="sluitExterneWaarschuwing()"
+      >
+        Annuleren
+      </button>
+
+      <button
+        type="button"
+        class="waarschuwing-doorgaan"
+        onclick="bevestigExterneWaarschuwing()"
+      >
+        Doorgaan
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ==================================================
+     WACHTWOORD OVERLAY
+================================================== -->
+<div id="wachtwoordOverlay">
+  <div class="wachtwoord-menu">
+    <h2>Wachtwoord vereist</h2>
+    <p>Vul het wachtwoord in om deze game in FlintWatch te openen.</p>
+    <input id="wachtwoordInput" type="password" placeholder="Wachtwoord" autocomplete="off">
+    <div id="wachtwoordFout">Onjuist wachtwoord.</div>
+    <div class="wachtwoord-knoppen">
+      <button type="button" class="waarschuwing-annuleren" onclick="sluitWachtwoordOverlay()">Annuleren</button>
+      <button type="button" class="waarschuwing-doorgaan" onclick="controleerWachtwoord()">Open game</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================================================
+     CREDITS OVERLAY
+================================================== -->
+
+<div id="creditsOverlay">
+
+  <div class="credits-menu">
+
+    <div class="credits-header">
+
+      <h2>
+        Credits & Version
+      </h2>
+
+      <button
+        class="credits-sluit"
+        type="button"
+        onclick="sluitCredits()"
+        aria-label="Credits sluiten"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <div class="credits-content">
+
+      <div class="credit-sectie">
+
+        <h3>
+          Version
+        </h3>
+
+        <p>
+          1.2
+        </p>
+
+      </div>
+
+        <div class="credit-sectie">
+
+        <h3>
+          What should work:
+        </h3>
+
+        <p>
+          Logo Tijdlek, favicon
+        </p>
+
+      </div>
+
+
+      <div class="credit-sectie">
+
+        <h3>
+          Games
+        </h3>
+
+        <p>
+          Flint Bruijn &amp; ChatGPT
+        </p>
+
+      </div>
+
+      <div class="credit-sectie">
+
+        <h3>
+          Layout
+        </h3>
+
+        <p>
+          Flint Bruijn &amp; ChatGPT
+        </p>
+
+      </div>
+
+      <div class="credit-sectie">
+
+        <h3>
+          Afbeeldingen
+        </h3>
+
+        <p>
+          De onderstaande bronnen zijn gebaseerd
+          op de afbeeldingslinks die in de website
+          zijn gebruikt.
+        </p>
+
+        <div
+          class="afbeelding-credit-lijst"
+          id="afbeeldingCredits"
+        ></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+/* ==================================================
+   MOBIELE SCHERMFORMAAT-WAARSCHUWING
+================================================== */
+
+const mobieleOrientatieWaarschuwing =
+  document.getElementById(
+    "mobieleOriëntatieWaarschuwing"
+  );
+
+const draaiTelefoonKnop =
+  document.getElementById(
+    "draaiTelefoonKnop"
+  );
+
+function isTelefoon() {
+  return (
+    window.matchMedia(
+      "(max-width: 767px) and (pointer: coarse)"
+    ).matches
+  );
+}
+
+async function draaiTelefoon() {
+
+  if (!isTelefoon()) {
+    return;
+  }
+
+  try {
+
+    if (
+      document.documentElement.requestFullscreen &&
+      !document.fullscreenElement
+    ) {
+      await document.documentElement.requestFullscreen();
+    }
+
+  } catch (error) {
+    /* Fullscreen is niet in iedere browser toegestaan. */
+  }
+
+  try {
+
+    if (
+      screen.orientation &&
+      screen.orientation.lock
+    ) {
+
+      await screen.orientation.lock(
+        "landscape"
+      );
+
+    }
+
+  } catch (error) {
+    /*
+      Sommige telefoons blokkeren orientation.lock.
+      De gebruiker kan het scherm dan handmatig draaien.
+    */
+  }
+
+  controleerMobieleOrientatie();
+
+}
+
+function controleerMobieleOrientatie() {
+
+  if (!mobieleOrientatieWaarschuwing) {
+    return;
+  }
+
+  const telefoon =
+    isTelefoon();
+
+  const portret =
+    window.matchMedia(
+      "(orientation: portrait)"
+    ).matches;
+
+  if (
+    telefoon &&
+    portret
+  ) {
+
+    mobieleOrientatieWaarschuwing.style.display =
+      "flex";
+
+  } else {
+
+    mobieleOrientatieWaarschuwing.style.display =
+      "none";
+
+  }
+
+}
+
+if (draaiTelefoonKnop) {
+
+  draaiTelefoonKnop.addEventListener(
+    "click",
+    draaiTelefoon
+  );
+
+}
+
+window.addEventListener(
+  "resize",
+  controleerMobieleOrientatie
+);
+
+window.addEventListener(
+  "orientationchange",
+  controleerMobieleOrientatie
+);
+
+if (screen.orientation) {
+
+  screen.orientation.addEventListener(
+    "change",
+    controleerMobieleOrientatie
+  );
+
+}
+
+document.addEventListener(
+  "fullscreenchange",
+  controleerMobieleOrientatie
+);
+
+controleerMobieleOrientatie();
+
+/* ==================================================
+   GAMES
+   NIETS AAN DEZE LIJST AANGEPAST
+================================================== */
+
+const BEVEILIGD_WACHTWOORD = "wachtwoord";
+
+const links = [
+
+  {
+    naam: "▶ Dutchtuber",
+    url: "https://www.google.com/goto?url=CAEScAHrOzAVi29DmaZUT_3fr-UP1E1QFKEqTx85WXuhX3obSUt2T6SPn2sQOmsat3DxaErCmkitDyuV1u_eC3rowG0N2yFuoG7PrvwuLQMVW1WPmHFoKrSWP27m9uMX8rpjH2C47WYZjeN2_X6POMHa_sk",
+    afbeelding:
+      "data:image/jpeg;base64,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"
+  },
+
+  
+
+ 
+  
+];
+
+/* ==================================================
+   ELEMENTEN
+================================================== */
+
+const menuPagina =
+  document.getElementById("menuPagina");
+
+const gamePagina =
+  document.getElementById("gamePagina");
+
+const container =
+  document.getElementById("gamesContainer");
+
+const andereGamesContainer =
+  document.getElementById("andereGamesContainer");
+
+const zoekveld =
+  document.getElementById("zoekveld");
+
+const aantal =
+  document.getElementById("aantal");
+
+const geenResultaat =
+  document.getElementById("geenResultaat");
+
+const gameFrame =
+  document.getElementById("gameFrame");
+
+const gameFrameContainer =
+  document.getElementById("gameFrameContainer");
+
+const gameLoading =
+  document.getElementById("gameLoading");
+
+const gameError =
+  document.getElementById("gameError");
+
+const gameTitel =
+  document.getElementById("gameTitel");
+
+const gameUrlStatus =
+  document.getElementById("gameUrlStatus");
+
+const creditsOverlay =
+  document.getElementById("creditsOverlay");
+
+const afbeeldingCredits =
+  document.getElementById("afbeeldingCredits");
+
+const externWaarschuwing =
+  document.getElementById("externWaarschuwing");
+
+const wachtwoordOverlay =
+  document.getElementById("wachtwoordOverlay");
+const wachtwoordInput =
+  document.getElementById("wachtwoordInput");
+const wachtwoordFout =
+  document.getElementById("wachtwoordFout");
+
+let huidigeGame = null;
+let wachtwoordGame = null;
+
+/* ==================================================
+   FALLBACK
+================================================== */
+
+const fallbackAfbeelding =
+  "data:image/svg+xml;charset=UTF-8," +
+  encodeURIComponent(`
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="640"
+      height="400"
+      viewBox="0 0 640 400">
+
+      <rect
+        width="640"
+        height="400"
+        fill="#29292e"
+      />
+
+      <text
+        x="320"
+        y="190"
+        text-anchor="middle"
+        fill="#ffffff"
+        font-family="Arial"
+        font-size="28"
+        font-weight="700">
+        FlintGames
+      </text>
+
+      <text
+        x="320"
+        y="230"
+        text-anchor="middle"
+        fill="#96969f"
+        font-family="Arial"
+        font-size="16">
+        Afbeelding niet beschikbaar
+      </text>
+
+    </svg>
+  `);
+
+/* ==================================================
+   SHUFFLE
+================================================== */
+
+function schud(array) {
+
+  const kopie = [...array];
+
+  for (
+    let i = kopie.length - 1;
+    i > 0;
+    i--
+  ) {
+
+    const j =
+      Math.floor(
+        Math.random() * (i + 1)
+      );
+
+    [
+      kopie[i],
+      kopie[j]
+    ] =
+    [
+      kopie[j],
+      kopie[i]
+    ];
+  }
+
+  return kopie;
+}
+
+const willekeurigeLinks =
+  schud(links);
+
+/* ==================================================
+   AFBEELDING VEILIG MAKEN
+================================================== */
+
+function veiligeAfbeelding(
+  afbeelding
+) {
+
+  if (
+    !afbeelding ||
+    afbeelding.includes("HIER_INVOEGEN")
+  ) {
+
+    return fallbackAfbeelding;
+  }
+
+  return afbeelding;
+}
+
+/* ==================================================
+   MENU GAMES
+================================================== */
+
+function toonGames(lijst) {
+
+  /* Games met onderaan: true komen altijd als laatste. */
+  const normaleGames = lijst.filter(function(link) {
+    return link.onderaan !== true;
+  });
+
+  const ondersteGames = lijst.filter(function(link) {
+    return link.onderaan === true;
+  });
+
+  lijst = [
+    ...normaleGames,
+    ...ondersteGames
+  ];
+
+  container.innerHTML = "";
+
+  aantal.textContent =
+    lijst.length +
+    (
+      lijst.length === 1
+        ? " game"
+        : " games"
+    );
+
+  if (lijst.length === 0) {
+
+    geenResultaat.style.display =
+      "block";
+
+    return;
+  }
+
+  geenResultaat.style.display =
+    "none";
+
+  lijst.forEach(
+    function(link) {
+
+      const knop =
+        document.createElement(
+          "button"
+        );
+
+      knop.type = "button";
+      knop.className = "game";
+
+      knop.innerHTML = `
+
+        <div class="kaart">
+
+          <img
+            class="game-afbeelding"
+            src="${escapeAttribute(
+              veiligeAfbeelding(
+                link.afbeelding
+              )
+            )}"
+            alt="${escapeAttribute(
+              link.naam
+            )}"
+            loading="lazy"
+          >
+
+          <div class="game-info">
+
+            <span class="game-naam">
+              ${escapeHTML(
+                link.naam
+              )}
+            </span>
+
+          </div>
+
+        </div>
+
+      `;
+
+      const afbeelding =
+        knop.querySelector(
+          ".game-afbeelding"
+        );
+
+      afbeelding.addEventListener(
+        "error",
+        function() {
+
+          this.src =
+            fallbackAfbeelding;
+
+        }
+      );
+
+      knop.addEventListener(
+        "click",
+        function() {
+
+          openGame(link);
+
+        }
+      );
+
+      container.appendChild(
+        knop
+      );
+
+    }
+  );
+
+}
+
+/* ==================================================
+   ANDERE GAMES
+================================================== */
+
+function toonAndereGames() {
+
+  andereGamesContainer.innerHTML =
+    "";
+
+  links.forEach(
+    function(link) {
+
+      const knop =
+        document.createElement(
+          "button"
+        );
+
+      knop.type = "button";
+      knop.className = "side-game";
+
+      if (
+        huidigeGame &&
+        huidigeGame.url === link.url
+      ) {
+
+        knop.classList.add(
+          "active"
+        );
+      }
+
+      knop.innerHTML = `
+
+        <img
+          class="side-game-afbeelding"
+          src="${escapeAttribute(
+            veiligeAfbeelding(
+              link.afbeelding
+            )
+          )}"
+          alt=""
+          loading="lazy"
+        >
+
+        <div class="side-game-info">
+
+          <div class="side-game-naam">
+            ${escapeHTML(
+              link.naam
+            )}
+          </div>
+
+          <div class="side-game-speel">
+            Spelen
+          </div>
+
+        </div>
+
+      `;
+
+      const afbeelding =
+        knop.querySelector(
+          ".side-game-afbeelding"
+        );
+
+      afbeelding.addEventListener(
+        "error",
+        function() {
+
+          this.src =
+            fallbackAfbeelding;
+
+        }
+      );
+
+      knop.addEventListener(
+        "click",
+        function() {
+
+          openGame(link);
+
+        }
+      );
+
+      andereGamesContainer.appendChild(
+        knop
+      );
+
+    }
+  );
+
+}
+
+/* ==================================================
+   GAME OPENEN
+================================================== */
+
+function openGame(game) {
+
+  /*
+    Wachtwoordbeveiligde games mogen pas openen
+    nadat het juiste wachtwoord is ingevoerd.
+  */
+  if (game.wachtwoordBeveiligd === true) {
+    wachtwoordGame = game;
+    wachtwoordFout.style.display = "none";
+    wachtwoordInput.value = "";
+    wachtwoordOverlay.style.display = "flex";
+
+    setTimeout(function() {
+      wachtwoordInput.focus();
+    }, 50);
+
+    return;
+  }
+
+  /*
+    Alleen . wordt
+    extern geopend.
+  */
+
+  if (
+    game.naam === "▶ ONE PIECE"
+  ) {
+
+    huidigeGame =
+      game;
+
+    externWaarschuwing.style.display =
+      "flex";
+
+    return;
+  }
+
+  huidigeGame =
+    game;
+
+  menuPagina.style.display =
+    "none";
+
+  gamePagina.style.display =
+    "block";
+
+  document.body.style.overflow =
+    "hidden";
+
+  gameTitel.textContent =
+    game.naam;
+
+  gameUrlStatus.textContent =
+    game.url;
+
+  gameError.style.display =
+    "none";
+
+  gameLoading.classList.remove(
+    "hidden"
+  );
+
+  gameFrame.src =
+    "about:blank";
+
+  toonAndereGames();
+
+  setTimeout(
+    function() {
+
+      gameFrame.src =
+        game.url;
+
+    },
+    40
+  );
+}
+
+function sluitWachtwoordOverlay() {
+  wachtwoordOverlay.style.display = "none";
+  wachtwoordGame = null;
+  wachtwoordInput.value = "";
+  wachtwoordFout.style.display = "none";
+}
+
+function controleerWachtwoord() {
+  if (!wachtwoordGame) return;
+
+  if (wachtwoordInput.value === BEVEILIGD_WACHTWOORD) {
+    const game = wachtwoordGame;
+    sluitWachtwoordOverlay();
+    openGameDirect(game);
+  } else {
+    wachtwoordFout.style.display = "block";
+    wachtwoordInput.select();
+  }
+}
+
+function openGameDirect(game) {
+  huidigeGame = game;
+  menuPagina.style.display = "none";
+  gamePagina.style.display = "block";
+  document.body.style.overflow = "hidden";
+  gameTitel.textContent = game.naam;
+  gameUrlStatus.textContent = game.url;
+  gameError.style.display = "none";
+  gameLoading.classList.remove("hidden");
+  gameFrame.src = "about:blank";
+  toonAndereGames();
+  setTimeout(function() {
+    gameFrame.src = game.url;
+  }, 40);
+}
+
+wachtwoordInput.addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
+    controleerWachtwoord();
+  }
+});
+
+wachtwoordOverlay.addEventListener("click", function(event) {
+  if (event.target === wachtwoordOverlay) {
+    sluitWachtwoordOverlay();
+  }
+});
+
+/* ==================================================
+   GAME GELADEN
+================================================== */
+
+gameFrame.addEventListener(
+  "load",
+  function() {
+
+    gameLoading.classList.add(
+      "hidden"
+    );
+
+  }
+);
+
+/* ==================================================
+   MENU
+================================================== */
+
+function naarMenu() {
+
+  sluitExterneWaarschuwing();
+
+  gamePagina.style.display =
+    "none";
+
+  menuPagina.style.display =
+    "block";
+
+  document.body.style.overflow =
+    "";
+
+  gameFrame.src =
+    "about:blank";
+
+  huidigeGame =
+    null;
+}
+
+/* ==================================================
+   FULLSCREEN
+================================================== */
+
+async function maakFullscreen() {
+
+  if (
+    document.fullscreenElement
+  ) {
+
+    if (
+      document.exitFullscreen
+    ) {
+
+      try {
+        await document.exitFullscreen();
+      } catch (error) {}
+    }
+
+    return;
+  }
+
+  if (
+    gameFrameContainer.requestFullscreen
+  ) {
+
+    try {
+      await gameFrameContainer.requestFullscreen();
+    } catch (error) {}
+  }
+
+  try {
+    if (
+      isTelefoon() &&
+      screen.orientation &&
+      screen.orientation.lock
+    ) {
+      await screen.orientation.lock("landscape");
+    }
+  } catch (error) {
+    /* De browser kan orientation lock blokkeren. */
+  }
+}
+
+/* ==================================================
+   EXTERN OPENEN
+================================================== */
+
+function openExtern() {
+
+  if (
+    huidigeGame &&
+    huidigeGame.url
+  ) {
+
+    window.open(
+      huidigeGame.url,
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+  }
+
+}
+
+/* ==================================================
+   EXTERNE WAARSCHUWING
+================================================== */
+
+function sluitExterneWaarschuwing() {
+
+  externWaarschuwing.style.display =
+    "none";
+
+}
+
+function bevestigExterneWaarschuwing() {
+
+  if (
+    huidigeGame &&
+    huidigeGame.url
+  ) {
+
+    window.open(
+      huidigeGame.url,
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+  }
+
+  sluitExterneWaarschuwing();
+
+}
+
+/* ==================================================
+   ZOEKEN
+================================================== */
+
+zoekveld.addEventListener(
+  "input",
+  function() {
+
+    const zoekterm =
+      this.value
+        .trim()
+        .toLowerCase();
+
+    const resultaten =
+      willekeurigeLinks.filter(
+        function(link) {
+
+          return link.naam
+            .toLowerCase()
+            .includes(
+              zoekterm
+            );
+
+        }
+      );
+
+    toonGames(
+      resultaten
+    );
+
+  }
+);
+
+/* ==================================================
+   HTML ESCAPEN
+================================================== */
+
+function escapeHTML(
+  tekst
+) {
+
+  return String(tekst)
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+
+}
+
+function escapeAttribute(
+  tekst
+) {
+
+  return escapeHTML(
+    tekst
+  );
+
+}
+
+/* ==================================================
+   BRON VAN AFBEELDING BEPALEN
+================================================== */
+
+function bepaalBron(
+  afbeelding
+) {
+
+  if (!afbeelding) {
+    return "Onbekend";
+  }
+
+  if (
+    afbeelding.startsWith(
+      "data:image/"
+    )
+  ) {
+
+    return "Onbekend";
+  }
+
+  if (
+    afbeelding.includes(
+      "i.ytimg.com"
+    )
+  ) {
+
+    return "YouTube";
+  }
+
+  if (
+    afbeelding.includes(
+      "mail"
+    )
+  ) {
+
+    return "Flint Bruijn";
+  }
+
+  if (
+    afbeelding.includes(
+      "github"
+    )
+  ) {
+
+    return "Flint Bruijn";
+  }
+
+  try {
+
+    const url =
+      new URL(
+        afbeelding
+      );
+
+    return url.hostname;
+
+  } catch {
+
+    return "Onbekend";
+
+  }
+}
+
+/* ==================================================
+   CREDITS TONEN
+================================================== */
+
+function toonCredits() {
+
+  afbeeldingCredits.innerHTML = "";
+
+  links.forEach(
+    function(game, index) {
+
+      const item =
+        document.createElement(
+          "div"
+        );
+
+      item.className =
+        "afbeelding-credit";
+
+      const afbeelding =
+        veiligeAfbeelding(
+          game.afbeelding
+        );
+
+      const gameNaam =
+        game.naam;
+
+      const bron =
+        bepaalBron(
+          game.afbeelding
+        );
+
+      item.innerHTML = `
+
+        <img
+          src="${escapeAttribute(
+            afbeelding
+          )}"
+          alt="Afbeelding ${index + 1}"
+        >
+
+        <div class="afbeelding-credit-info">
+
+          <span class="afbeelding-credit-nummer">
+            Afbeelding ${index + 1}
+          </span>
+
+          <span class="afbeelding-credit-game">
+            ${escapeHTML(
+              gameNaam
+            )}
+          </span>
+
+          <span class="afbeelding-credit-bron">
+            Bron: ${escapeHTML(
+              bron
+            )}
+          </span>
+
+        </div>
+
+      `;
+
+      const img =
+        item.querySelector(
+          "img"
+        );
+
+      img.addEventListener(
+        "error",
+        function() {
+
+          this.src =
+            fallbackAfbeelding;
+
+        }
+      );
+
+      afbeeldingCredits.appendChild(
+        item
+      );
+
+    }
+  );
+
+}
+
+/* ==================================================
+   CREDITS OPENEN
+================================================== */
+
+function openCredits() {
+
+  toonCredits();
+
+  creditsOverlay.style.display =
+    "flex";
+
+}
+
+/* ==================================================
+   CREDITS SLUITEN
+================================================== */
+
+function sluitCredits() {
+
+  creditsOverlay.style.display =
+    "none";
+
+}
+
+/* ==================================================
+   BUITEN HET VENSTER KLIKKEN
+================================================== */
+
+creditsOverlay.addEventListener(
+  "click",
+  function(event) {
+
+    if (
+      event.target ===
+      creditsOverlay
+    ) {
+
+      sluitCredits();
+
+    }
+
+  }
+);
+
+externWaarschuwing.addEventListener(
+  "click",
+  function(event) {
+
+    if (
+      event.target ===
+      externWaarschuwing
+    ) {
+
+      sluitExterneWaarschuwing();
+
+    }
+
+  }
+);
+
+/* ==================================================
+   ESCAPE
+================================================== */
+
+document.addEventListener(
+  "keydown",
+  function(event) {
+
+    if (
+      event.key === "Escape"
+    ) {
+
+      if (
+        externWaarschuwing.style.display ===
+        "flex"
+      ) {
+
+        sluitExterneWaarschuwing();
+
+        return;
+      }
+
+      if (
+        creditsOverlay.style.display ===
+        "flex"
+      ) {
+
+        sluitCredits();
+
+        return;
+      }
+
+      if (
+        document.fullscreenElement
+      ) {
+
+        return;
+
+      }
+
+      if (
+        gamePagina.style.display ===
+        "block"
+      ) {
+
+        naarMenu();
+
+      }
+
+    }
+
+  }
+);
+
+/* ==================================================
+   START
+================================================== */
+
+toonGames(
+  willekeurigeLinks
+);
+
+</script>
+
+</body>
+</html>
